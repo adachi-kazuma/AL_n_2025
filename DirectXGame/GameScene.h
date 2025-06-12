@@ -1,6 +1,8 @@
 #pragma once
 #include "KamataEngine.h"
 #include <vector>
+#include"Skydome.h"
+#include"Player.h"
 
 using namespace KamataEngine;
 
@@ -27,4 +29,11 @@ public:
 
 	KamataEngine::WorldTransform worldTransform_;
 	KamataEngine::Camera camera_;
+	//休
+	Skydome* skydome_ = nullptr;
+
+	Model* modelSkydome_ = nullptr;
+
+	Player* player_ = nullptr;
+	Model* modelPlayer_ = nullptr;
 };

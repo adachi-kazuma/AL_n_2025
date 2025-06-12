@@ -1,5 +1,7 @@
 #include "GameScene.h"
 #include "MyMath.h"
+#include "Skydome.h"
+#include"Player.h"
 
 using namespace KamataEngine;
 
@@ -7,9 +9,16 @@ void GameScene::Initialize() {
 
 	worldTransform_.Initialize();
 	camera_.Initialize();
+	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
+	skydome_ = new Skydome();
+	skydome_->Initialize(modelSkydome_, &camera_);
+	modelPlayer_ = Model::CreateFromOBJ("Player", true);
+	player_ = new Player();
+	player_->Initialize(modelPlayer_, &camera_);
+
 
 	// 3Dモデルデータの生成
-	modelBlock_ = Model::CreateFromOBJ("cube");
+	modelBlock_ = Model::CreateFromOBJ("block");
 
 	// 要素数
 	const uint32_t kNumBlockVirtical = 10;
@@ -44,6 +53,9 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
+
+	//plert
+	player_->Update();
 
 	for (std::vector<WorldTransform*>& worldtransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldtransformBlockLine) {
@@ -91,6 +103,8 @@ void GameScene::Draw() {
 
 	Model::PreDraw(dxCommon->GetCommandList());
 
+	player_->Draw();
+	skydome_->Draw();
 	// ブロック描画
 	for (std::vector<WorldTransform*>& worldtransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldtransformBlockLine) {
@@ -117,4 +131,5 @@ GameScene::~GameScene() {
 	worldTransformBlocks_.clear();
 
 	delete debugCamera_;
+	/*delete modelSkydome_;*/
 }

@@ -5,7 +5,7 @@
 class Player {
 public:
 	// 初期化
-	void Initialize(KamataEngine::Model* model, uint32_t textureHandle, KamataEngine::Camera* camera);
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera);
 
 	// 更新
 	void Update();
@@ -21,6 +21,6 @@ private:
 	KamataEngine::Model* model_ = nullptr;
 
 	// hundle
-	uint32_t textureHandle_ = 0u;
+	/*uint32_t textureHandle_ = 0u;*/
 	KamataEngine::Camera* camera_ = nullptr;
 };

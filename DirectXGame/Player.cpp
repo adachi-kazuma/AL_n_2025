@@ -1,15 +1,16 @@
 #include "Player.h"
+#include"MyMath.h"
 
 using namespace KamataEngine;
 
-void Player::Initialize(Model* model, uint32_t textureHandle, Camera* camera) {
+void Player::Initialize(Model* model, Camera* camera) {
 
 	// ポインタチェック
 	assert(model);
 
 	// メンバ変数に記録
 	model_ = model;
-	textureHandle_ = textureHandle;
+	/*textureHandle_ = textureHandle;*/
 	camera_ = camera;
 	assert(camera);
 	worldTransform_.Initialize();
@@ -18,11 +19,11 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Camera* camera) {
 void Player::Update() {
 
 	// 行列を転送
-	worldTransform_.TransferMatrix();
+	worldTransform_.matWorld_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 }
 
 void Player::Draw() {
 
 	// 3Dモデルを描画
-	model_->Draw(worldTransform_, *camera_, textureHandle_);
+	model_->Draw(worldTransform_, *camera_);
 }
