@@ -68,8 +68,8 @@ void GameScene::Initialize() {
 	player_->Initialize(modelPlayer_, &camera_, playerPosition);
 	player_->SetMapChipField(mapChipFiled_);
 	//生成
-	deathParticles_ = new DeathParticles;
-	deathParticles_->Initialize(DeathParticlesModel_, &camera_, playerPosition);
+	/*deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(DeathParticlesModel_, &camera_, playerPosition);*/
 	//敵
 	/*enemy_->Initialize(modelEnemy_, &camera_, enemyPosition);
 	enemy_->SetMapChipField(mapChipFiled_);*/
@@ -99,7 +99,6 @@ void GameScene::Update() {
 				continue;
 			}
 			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
 			worldTransformBlock->TransferMatrix();
 		}
 	}
@@ -128,15 +127,18 @@ void GameScene::Update() {
 	{
 		enemy->Update();
 	}
-	//ですパーチ来る
-	/*if (deathParticles_ ) {
-		deathParticles_->Update();
-	}*/
-	deathParticles_->Update();
+	
 	//フェーズ
 	switch (phase_) { 
 	case Phase::kPlay:
+		// ですパーチ来る
+		if (deathParticles_) {
+			deathParticles_->Update();
+		}
+		/*deathParticles_->Update();*/
+
 		if (player_->isDead_) {
+
 			phase_ = Phase::kDeath;
 			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
 			deathParticles_ = new DeathParticles();
@@ -144,6 +146,9 @@ void GameScene::Update() {
 		}
 		break;
 	case Phase::kDeath:
+		if (deathParticles_ && deathParticles_->IsFinished()) {
+			finished_ = true;
+		}
 		break;
 	}
 }
@@ -174,10 +179,11 @@ void GameScene::Draw() {
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
 	}
-	/*if (deathParticles_) {
+	if (deathParticles_) {
 		deathParticles_->Draw();
-	}*/
-	deathParticles_->Draw();
+	}
+
+	//deathParticles_->Draw();
 	// スプライト描画後処理
 	Model::PostDraw();
 }

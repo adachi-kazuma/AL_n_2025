@@ -33,7 +33,8 @@ public:
 	~GameScene();
 
 	bool isDebugCameraActive_ = false;
-
+	bool finished_ = false;
+	bool IsFinished() const { return finished_; }
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
 	Skydome* Skydome_ = nullptr;

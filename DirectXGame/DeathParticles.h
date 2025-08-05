@@ -26,6 +26,8 @@ class DeathParticles {
 	KamataEngine::Vector4 color_;
 	//フラグ
 	bool isFinished_ = false;
+	
+	bool IsFinished() const { return finished_; }
 	float counter_ = 0.0f;
 	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position);
 
@@ -34,8 +36,9 @@ class DeathParticles {
 
 	void Draw();
 
+private:
 
-
+	bool finished_ = false;
 
 
 };
