@@ -44,7 +44,7 @@ public:
 	void OnCollision(const Player* player);
 	private:
 	//補講
-	static inline const float kWalkSpeed = 0.3f;
+	static inline const float kWalkSpeed = 0.1f;
 	//補講の速度
 	Vector3 velocity_ = {};
 };

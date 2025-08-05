@@ -32,7 +32,8 @@ public:
 	Vector3 GetWorldPosition();
 	AABB GetAABB();
 	void OnCollision(const Enemy* enemy);
-
+	bool isDead_ = false;
+	bool IsDead() const { return isDead_; }
 
 
 private:
@@ -128,4 +129,5 @@ private:
 	static inline const float kGroundSearchHeight = 0.1f;
 	//着地時の速度減退
 	static inline const float kAttenuationWall = 0.5f;
+	
 };

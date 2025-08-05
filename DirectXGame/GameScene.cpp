@@ -8,6 +8,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete modelSkydome_;
+	delete deathParticles_;
 	/*delete enemy_;*/
 	for (std::vector<KamataEngine::WorldTransform*>& worldTransformBlockline : worldTransformBlocks_) {
 		for (KamataEngine::WorldTransform* worldTransformBlock : worldTransformBlockline) {
@@ -39,11 +40,14 @@ void GameScene::Initialize() {
 
 	mapChipFiled_ = new MapChipField;
 	mapChipFiled_->LoadMapChipCsv("Resources/blocks.csv");
+     DeathParticlesModel_  = Model::CreateFromOBJ("deathParticle", true);
+	 //フェーズ
+	 phase_ = Phase::kPlay;
 
 	GenerateBlocks();
 
 	camera_.Initialize();
-
+	//
 
 	// 自キャラにの生成
 	player_ = new Player();
@@ -58,15 +62,18 @@ void GameScene::Initialize() {
 	//enemy_ = new Enemy();
 	//Vector3 enemyPosition = mapChipFiled_->GetMapChipPositionByIndex(5, 18);
 
-	Vector3 playerPosition = mapChipFiled_->GetMapChipPositionByIndex(1, 18);
+	Vector3 playerPosition = mapChipFiled_->GetMapChipPositionByIndex(3,18);
 
 	// 自キャラの初期化
 	player_->Initialize(modelPlayer_, &camera_, playerPosition);
 	player_->SetMapChipField(mapChipFiled_);
+	//生成
+	deathParticles_ = new DeathParticles;
+	deathParticles_->Initialize(DeathParticlesModel_, &camera_, playerPosition);
 	//敵
 	/*enemy_->Initialize(modelEnemy_, &camera_, enemyPosition);
 	enemy_->SetMapChipField(mapChipFiled_);*/
-	//敵の福島
+	//敵の大原
 	for (int32_t i = 0; i < 3; i++) 
 	{
 		Enemy* newEnemy = new Enemy();
@@ -121,7 +128,24 @@ void GameScene::Update() {
 	{
 		enemy->Update();
 	}
-
+	//ですパーチ来る
+	/*if (deathParticles_ ) {
+		deathParticles_->Update();
+	}*/
+	deathParticles_->Update();
+	//フェーズ
+	switch (phase_) { 
+	case Phase::kPlay:
+		if (player_->isDead_) {
+			phase_ = Phase::kDeath;
+			const Vector3& deathParticlesPosition = player_->GetWorldPosition();
+			deathParticles_ = new DeathParticles();
+			deathParticles_->Initialize(DeathParticlesModel_, &camera_, deathParticlesPosition);
+		}
+		break;
+	case Phase::kDeath:
+		break;
+	}
 }
 
 // 描画処理
@@ -150,7 +174,10 @@ void GameScene::Draw() {
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
 	}
-
+	/*if (deathParticles_) {
+		deathParticles_->Draw();
+	}*/
+	deathParticles_->Draw();
 	// スプライト描画後処理
 	Model::PostDraw();
 }
@@ -199,4 +226,16 @@ void GameScene::GenerateBlocks() {
 			}
 		}
 	}
+}
+
+void GameScene::ChangePhase() 
+{
+	switch (phase_) { 
+		case Phase::kPlay:
+		break;
+	    case Phase::kDeath:
+		    break;
+	}
+
+
 }

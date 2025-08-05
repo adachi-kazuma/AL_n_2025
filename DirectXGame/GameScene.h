@@ -6,6 +6,7 @@
 #include "player.h"
 #include <vector>
 #include "Enemy.h"
+#include "DeathParticles.h"
 
 using namespace KamataEngine;
 
@@ -15,10 +16,11 @@ class GameScene {
 	MapChipField* mapChipFiled_;
 	std::list<Enemy*> enemies_;
 	void CheckAllCollisions();
+	
 
 public:
 	void GenerateBlocks();
-
+	void ChangePhase();
 	// 初期化
 	void Initialize();
 
@@ -50,6 +52,14 @@ public:
 	KamataEngine::Model* modelEnemy_ = nullptr;
 	KamataEngine::WorldTransform worldTransform_;
 	KamataEngine::Camera camera_;
+	DeathParticles* deathParticles_ = nullptr;
+	KamataEngine::Model* DeathParticlesModel_ = nullptr;
+	//フェーズ
+	enum class Phase {
+		kPlay,
+		kDeath,
+	};
+	Phase phase_;
 
 private:
 	uint32_t skydomeHandle_ = 0;
