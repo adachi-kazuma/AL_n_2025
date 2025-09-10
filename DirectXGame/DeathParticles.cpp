@@ -7,9 +7,9 @@ using namespace MathUtility;
 
 void DeathParticles::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3& position) 
 {
-	assert(camera);
+	//assert(camera);
 	camera_ =camera;
-	assert(model);
+	/*assert(model);*/
 	model_ = model;
 
 

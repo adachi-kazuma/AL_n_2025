@@ -7,7 +7,7 @@
 #include <vector>
 #include "Enemy.h"
 #include "DeathParticles.h"
-
+#include "Fade.h"
 using namespace KamataEngine;
 
 // ゲームシーン
@@ -19,6 +19,13 @@ class GameScene {
 	
 
 public:
+	enum class Phase {
+		kPlay,  // ゲームプレイ
+		kDeath, // デス演出
+		kFadeIn,
+		kFadeout,
+	};
+	Phase phase_;
 	void GenerateBlocks();
 	void ChangePhase();
 	// 初期化
@@ -56,11 +63,8 @@ public:
 	DeathParticles* deathParticles_ = nullptr;
 	KamataEngine::Model* DeathParticlesModel_ = nullptr;
 	//フェーズ
-	enum class Phase {
-		kPlay,
-		kDeath,
-	};
-	Phase phase_;
+	Fade* fade_ = nullptr;
+	/*Phase phase_;*/
 
 private:
 	uint32_t skydomeHandle_ = 0;

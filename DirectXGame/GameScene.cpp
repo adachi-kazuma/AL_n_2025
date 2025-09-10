@@ -24,6 +24,7 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete mapChipFiled_;
 	delete cameraController_;
+	delete fade_;
 }
 
 // 初期化処理
@@ -42,7 +43,7 @@ void GameScene::Initialize() {
 	mapChipFiled_->LoadMapChipCsv("Resources/blocks.csv");
      DeathParticlesModel_  = Model::CreateFromOBJ("deathParticle", true);
 	 //フェーズ
-	 phase_ = Phase::kPlay;
+	 phase_ = Phase::kFadeIn;
 
 	GenerateBlocks();
 
@@ -86,6 +87,9 @@ void GameScene::Initialize() {
 	CameraController::Rect cameraArea = {12.0f, 100 -12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(cameraArea);
 
+	fade_ = new Fade();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 1.0f);
 }
  
 
@@ -131,10 +135,6 @@ void GameScene::Update() {
 	//フェーズ
 	switch (phase_) { 
 	case Phase::kPlay:
-		// ですパーチ来る
-		if (deathParticles_) {
-			deathParticles_->Update();
-		}
 		/*deathParticles_->Update();*/
 
 		if (player_->isDead_) {
@@ -150,6 +150,23 @@ void GameScene::Update() {
 			finished_ = true;
 		}
 		break;
+	case GameScene::Phase::kFadeIn:
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			phase_ = Phase::kPlay;
+		}
+		break;
+	case GameScene::Phase::kFadeout:
+		fade_->Update();
+		if (fade_->IsFinished()) {
+			finished_ = true;
+		}
+		break;
+	}
+	fade_->Update();
+	// ですパーチ来る
+	if (deathParticles_) {
+		deathParticles_->Update();
 	}
 }
 
@@ -182,7 +199,7 @@ void GameScene::Draw() {
 	if (deathParticles_) {
 		deathParticles_->Draw();
 	}
-
+	fade_->Draw();
 	//deathParticles_->Draw();
 	// スプライト描画後処理
 	Model::PostDraw();

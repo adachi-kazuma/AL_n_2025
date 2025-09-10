@@ -1,7 +1,14 @@
 #pragma once
 #include "KamataEngine.h"
+#include"Fade.h"
 class TitleScene {
 public:
+	// シーンのフェーズ
+	enum class Phase {
+		kFadeIn,
+		kMain,
+		kFadeOut,
+	};
 	~TitleScene();
 	bool finished_ = false;
 	bool IsFinished() const { return finished_; }
@@ -16,6 +23,7 @@ public:
 	KamataEngine::WorldTransform worldTransform_;
 	KamataEngine::WorldTransform worldTransformPlayer_;
 	float rotate = 0.0f;
-
+	Fade* fade_ = nullptr;
+	Phase phase_ = Phase::kFadeIn;
 
 };
